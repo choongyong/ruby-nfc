@@ -178,6 +178,68 @@ module LibNFC
     end
   end
 
+  class DESFireInfo < FFI::Struct
+    pack 1
+    layout(
+      :vendor_id, :uint8,
+      :type, :uint8,
+      :subtype, :uint8,
+      :version_major, :uint8,
+      :version_minor, :uint8,
+      :storage_size, :uint8,
+      :protocol, :uint8
+    )
+  end
+ 
+  class MIFAREDESFireVersionInfo < FFI::Struct
+    pack 1
+    layout(
+      :hardware, DESFireInfo,
+      :software, DESFireInfo,
+      :uid, [:uint8, 7],
+      :batch_number, [:uint8, 5],
+      :production_week, :uint8,
+      :production_year, :uint8
+    )
+  end
+
+  class KS < FFI::Union
+    pack 1
+    layout(
+      :cblock, [:uchar, 8],
+      :deslong, [:uint, 2]
+    )
+  end
+
+  class DESKeySchedule < FFI::Struct
+    pack 1
+    layout(
+      :ks, [KS, 16]
+    )
+  end
+
+  CIPHER_TYPE = [
+    :T_DES,
+    :T_3DES,
+    :T_3K3DES,
+    :T_AES
+  ]
+  CipherType = enum(CIPHER_TYPE)
+
+  class MIFAREDESFireKey < FFI::Struct
+    pack 1
+    layout(
+      :data, [:uint8, 24],
+      :type, CipherType,
+      :ks1, DESKeySchedule,
+      :ks2, DESKeySchedule,
+      :ks3, DESKeySchedule,
+      :cmac_sk1, [:uint8, 24],
+      :cmac_sk2, [:uint8, 24],
+      :aes_version, :uint8
+    )
+  end
+
   ###
   #Version checking before wrapping the rest of the library to prevent
   #name method matching errors.
