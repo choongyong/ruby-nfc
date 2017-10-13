@@ -16,6 +16,7 @@ Gem::Specification.new do |s|
 		"./lib/ruby-nfc.rb",
 		"./lib/ruby-nfc/nfc.rb",
 		"./lib/ruby-nfc/tags/mifare/classic.rb",
+		"./lib/ruby-nfc/tags/mifare/desfire.rb",
 		"./lib/ruby-nfc/tags/mifare/tag.rb",
 		"./lib/ruby-nfc/tags/mifare/ultralight.rb",
 		"./lib/ruby-nfc/tags/isodep.rb",

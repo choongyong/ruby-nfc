@@ -25,9 +25,9 @@ module Mifare
 
         @auth_block = nil #last authenticated block
       end
-
+      
       def connect(&block)
-        @reader.set_flag(:NP_AUTO_ISO14443_4, false)
+        @reader.set_flag(:NP_AUTO_ISO14443_4, true)
 
         res = Mifare.mifare_desfire_connect(@pointer)
         if 0 == res 
@@ -42,13 +42,13 @@ module Mifare
         super
       end
 
-      def get_version()
-        data_ptr = FFI::MemoryPointer.new(:uchar, 28)
+      def get_version
+        data_ptr = FFI::MemoryPointer.new(:uchar, LibNFC::MIFAREDESFireVersionInfo.size)
         res = Mifare.mifare_desfire_get_version(@pointer, data_ptr)
 
         raise Mifare::Error, "Can't read block 0x%02x" % block_num if 0 != res
 
-        data_ptr.get_bytes(0, 28).force_encoding("ASCII-8BIT")
+        data_ptr
       end
 
       # returns only value part of value block
